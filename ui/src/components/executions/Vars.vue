@@ -25,10 +25,10 @@
                         <code class="vars-key">{{ item.key }}</code>
 
                         <div class="vars-value">
-                            <KsDateAgo v-if="item.date" :inverted="true" :date="item.value" />
+                            <KsDateAgo v-if="item.date" :inverted="true" :date="item.value as string" />
                             <template v-else-if="item.subflow">
                                 {{ item.value }}
-                                <SubFlowLink :executionId="item.value" />
+                                <SubFlowLink :executionId="item.value as string" />
                             </template>
                             <VarValue v-else :execution="executionsStore.execution" :value="item.value" :name="item.key" />
                         </div>
@@ -52,14 +52,14 @@
 
     interface VariableRow {
         key: string;
-        value: any;
+        value: string | object | boolean | number;
         date?: boolean;
         subflow?: boolean;
     }
 
     const props = withDefaults(
         defineProps<{
-            data: Record<string, any>;
+            data: Record<string, unknown>;
             keyLabelTranslationKey?: string;
         }>(),
         {
