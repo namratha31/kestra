@@ -25,8 +25,12 @@
                         <code class="vars-key">{{ item.key }}</code>
 
                         <div class="vars-value">
-                            <KsDateAgo v-if="item.date" :inverted="true" :date="item.value" />
-                            <template v-else-if="item.subflow">
+                            <KsDateAgo
+                                v-if="item.date && typeof item.value === 'string'"
+                                :inverted="true"
+                                :date="item.value"
+                            />
+                            <template v-else-if="item.subflow && typeof item.value === 'string'">
                                 {{ item.value }}
                                 <SubFlowLink :executionId="item.value" />
                             </template>
@@ -52,14 +56,14 @@
 
     interface VariableRow {
         key: string;
-        value: any;
+        value: string | object | boolean | number;
         date?: boolean;
         subflow?: boolean;
     }
 
     const props = withDefaults(
         defineProps<{
-            data: Record<string, any>;
+            data: Record<string, unknown>;
             keyLabelTranslationKey?: string;
         }>(),
         {
@@ -73,43 +77,3 @@
         return Utils.executionVars(props.data)
     })
 </script>
-
-<style scoped lang="scss">
-.vars {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-}
-
-.vars-rows {
-    /* Bounds the scroll window so only the visible rows are built; a short list stays its own
-       height, since the total is below the max (kestra-io/kestra#19316). */
-    max-height: 60vh;
-}
-
-.vars-row {
-    /* The surface KsTable used to paint, so the list reads the same inside a drawer or a modal. */
-    background: var(--ks-bg-overlay);
-    display: grid;
-    grid-template-columns: minmax(10rem, 15rem) 1fr;
-    gap: var(--ks-spacing-4);
-    align-items: start;
-    padding: var(--ks-spacing-3) var(--ks-spacing-4);
-    border-bottom: 1px solid var(--ks-border-subtle);
-}
-
-.vars-head {
-    color: var(--ks-text-secondary);
-    border-bottom: 1px solid var(--ks-border-default);
-}
-
-.vars-key {
-    overflow-wrap: anywhere;
-}
-
-.vars-value {
-    /* A truncated value is one unbroken 2000-character line, unreadable without a wrap. */
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-</style>
