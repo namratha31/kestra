@@ -24,13 +24,13 @@
     import ChartAreaspline from "vue-material-design-icons/ChartAreaspline.vue"
     import MetricsTable from "./MetricsTable.vue"
     import {Execution} from "../../stores/executions"
+    import type {TaskRun} from "@kestra-io/kestra-sdk"
 
     const props = defineProps<{
         embed?: boolean;
-        taskRun: Record<string, any>;
+        taskRun: TaskRun;
         execution: Execution;
     }>()
-
     const isOpen = ref(false)
     const table = ref<InstanceType<typeof MetricsTable> | null>(null)
 
